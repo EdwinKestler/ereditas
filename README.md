@@ -8,7 +8,9 @@ Product: a liveness-gated digital estate companion. Idea:
 [`docs/companion.md`](docs/companion.md). White paper:
 [`docs/Ereditas-White-Paper.pdf`](docs/Ereditas-White-Paper.pdf). Hackathon
 notes: [`docs/hackathon.md`](docs/hackathon.md). Doc index:
-[`docs/README.md`](docs/README.md).
+[`docs/README.md`](docs/README.md). Public GitHub:
+[EdwinKestler/ereditas](https://github.com/EdwinKestler/ereditas)
+(PolyForm Noncommercial).
 
 ## Companion
 
@@ -76,8 +78,21 @@ npx ecc-agentshield@1.6.0 scan --path /media/kestl/andor/github/ereditas
 | `.palimnex/` | Runtime ledger and Redis (gitignored) |
 | `.ecc/` | ECC Memory Vault if ever opted in (gitignored) |
 | `AGENTS.md` | Instructions for coding agents |
+| `LICENSE` | PolyForm Noncommercial 1.0.0 © 2026 Edwin Kestler |
+
+## License
+
+Original Ereditas code is [PolyForm Noncommercial 1.0.0](LICENSE) © 2026
+Edwin Kestler. Personal, research, hobby, school, charity, and government use
+is allowed. Commercial use needs a separate grant. Notes:
+[`docs/license.md`](docs/license.md).
+
+Vendored ECC skills under `.agents/skills/` remain MIT © 2026 Affaan Mustafa;
+see [`.agents/skills/NOTICE.md`](.agents/skills/NOTICE.md).
 
 ## Source
+
+Public GitHub: https://github.com/EdwinKestler/ereditas
 
 Grok project (login required):
 https://grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f?tab=conversations

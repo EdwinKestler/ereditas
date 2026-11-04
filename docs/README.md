@@ -6,6 +6,7 @@ Start here, then open the matching file. Palimnex indexes this folder.
 | --- | --- |
 | [`companion.md`](companion.md) | How to run the merged two-process demo |
 | [`hackathon.md`](hackathon.md) | Event, track, Meta surfaces, submission owed |
+| [`license.md`](license.md) | Why PolyForm Noncommercial; MIT is not required |
 | [`palimnex.md`](palimnex.md) | Source cache and ledger |
 | [`ecc.md`](ecc.md) | Vendored ECC workflow skills |
 | [`project-source.md`](project-source.md) | Grok project URL and local ids |

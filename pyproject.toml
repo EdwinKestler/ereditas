@@ -7,6 +7,7 @@ name = "ereditas"
 version = "0.1.0"
 description = "Ereditas companion: liveness-gated digital estate for the Meta AI Hackathon"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
 dependencies = [
   "openai>=2.0,<4",

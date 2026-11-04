@@ -13,6 +13,7 @@ Verified 3 Nov 2026 against the public listing. Submissions due **4 Nov 2026,
 | Product | Ereditas companion — liveness-gated digital estate |
 | Idea | `ideas/ereditas.md` |
 | White paper | `docs/Ereditas-White-Paper.pdf` |
+| Public GitHub | https://github.com/EdwinKestler/ereditas (PolyForm Noncommercial) |
 
 ## Required Meta surfaces in the demo
 
@@ -34,7 +35,10 @@ the key is present. TDD: `docs/releases/0.1.0/`.
 
 ## Submission artifacts still owed
 
-- Public GitHub repository
 - Live product URL
 - 3-minute demo video of hackathon-period work
 - Cerebral Valley submit form before 4 Nov 9:00 PM ET
+
+Public GitHub is live: https://github.com/EdwinKestler/ereditas.
+Licence notes: `docs/license.md`. MIT is not required; the participant guide
+only requires a **public** repository.
