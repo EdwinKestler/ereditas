@@ -176,7 +176,7 @@ function Pulse() {
       </p>
       <Gauge pct={snap.ring} tone={tone} />
       <p className="text-center text-sm text-muted">
-        {snap.index_note} Posterior {snap.posterior_label}. Tree {snap.tree_open ? "open" : "closed"}.
+        {snap.index_note} Evidence {snap.posterior_label}. Tree {snap.tree_open ? "open" : "closed"}.
       </p>
       <div className="grid grid-cols-3 gap-2">
         <Chip label="Device" value={snap.chips.device ? "4h" : `${snap.days}d`} />
@@ -186,7 +186,7 @@ function Pulse() {
       <ol className="space-y-2 rounded-card border border-line bg-card p-3">
         <Step n="1" done={snap.days > 0} text="No device or Meta activity" />
         <Step n="2" done={snap.scanned} text="News, obituaries, Facebook & Instagram" />
-        <Step n="3" done={snap.posts.length > 0} text="SAM 3.1 memorial classification" />
+        <Step n="3" done={snap.posts.length > 0} text="SAM 3.1 finds memorial objects" />
         <Step n="4" done={snap.messaged} text="WhatsApp tree to emergency contacts" />
         <Step n="5" done={snap.may_release} text="Release the last-wishes vault" />
       </ol>
@@ -452,7 +452,7 @@ function Circle() {
         <div className="space-y-3 bg-paper px-4 py-4">
           {!snap.tree_open && (
             <p className="text-sm text-gold">
-              Tree closed. Posterior {snap.posterior_label} (bar 20%). Run the worked case to place the
+              Tree closed. Evidence {snap.posterior_label} (bar 20%). Run the worked case to place the
               call.
             </p>
           )}

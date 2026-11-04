@@ -180,7 +180,7 @@ class DemoSession:
     def message(self) -> dict[str, Any]:
         day = run_watch_day(self._signals())
         if not day.tree_open:
-            return self.snapshot(error="Tree is closed. Posterior is under the 20% bar.")
+            return self.snapshot(error="Tree is closed. Evidence is under the 20% bar.")
         if not self.messaged:
             self.messaged = True
             self.thread.append(
@@ -219,7 +219,7 @@ class DemoSession:
     def answer(self, who: str, answer: str) -> dict[str, Any]:
         day = run_watch_day(self._signals())
         if not day.tree_open and answer != "well":
-            return self.snapshot(error="Tree is closed. Posterior is under the 20% bar.")
+            return self.snapshot(error="Tree is closed. Evidence is under the 20% bar.")
         result = self.tree.answer(who, Answer(answer))
         self.thread.append(
             {
@@ -275,7 +275,7 @@ class DemoSession:
     def voice_answer(self, who: str, clip: str) -> dict[str, Any]:
         day = run_watch_day(self._signals())
         if not day.tree_open:
-            return self.snapshot(error="Tree is closed. Posterior is under the 20% bar.")
+            return self.snapshot(error="Tree is closed. Evidence is under the 20% bar.")
         selected = VOICE_CLIPS.get(clip)
         if selected is None:
             return self.snapshot(error="Unknown voice clip.")
@@ -354,5 +354,5 @@ class DemoSession:
                 "sam_model": self.settings.sam_model,
                 "vocab": list(MEMORIAL_VOCAB),
             },
-            "index_note": "The ring is a watch index, not P(Z=1|x).",
+            "index_note": "The ring measures silence, not death.",
         }

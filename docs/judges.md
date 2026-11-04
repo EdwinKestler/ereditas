@@ -1,6 +1,6 @@
 # How to test Ereditas (judges)
 
-**Live companion:** https://ereditas.fly.dev/ · **Explainer:** https://edwinkestler.github.io/ereditas/
+**Live companion:** https://app.ereditas.com/ (backup: https://ereditas.fly.dev/) · **Explainer:** https://edwinkestler.github.io/ereditas/
 
 Each visitor gets a private demo session; other judges don't see your
 changes. **Start fresh** (top right) returns to the beginning at any time.
@@ -42,7 +42,7 @@ without audio. *She is well* resets the watch.
 ## API check (optional)
 
 ```bash
-U=https://ereditas.fly.dev; J='-c /tmp/ered.jar -b /tmp/ered.jar'
+U=https://app.ereditas.com; J='-c /tmp/ered.jar -b /tmp/ered.jar'
 curl -s $J -X POST $U/api/reset >/dev/null
 curl -s $J -X POST $U/api/advance -H 'Content-Type: application/json' -d '{"days":2}' >/dev/null
 curl -s $J -X POST $U/api/scan        | jq '{tree_open, posterior}'   # false, ~6.95

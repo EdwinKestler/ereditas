@@ -1,7 +1,7 @@
 # Submission kit — Meta Global AI Developer Hackathon
 
 Draft 4 Nov 2026 09:00 GT. Deadline 9:00 PM ET = 8:00 PM GT. Internal cut 6:00 PM GT.
-Fill https://ereditas.fly.dev/ and `VIDEO_URL` once known. Voice-note lines marked [V] ship
+Fill https://app.ereditas.com/ and `VIDEO_URL` once known. Voice-note lines marked [V] ship
 only if feat/voice-note merges.
 
 ## Links
@@ -9,7 +9,7 @@ only if feat/voice-note merges.
 | Field | Value |
 | --- | --- |
 | Track / theme | Indie · Build for Your World |
-| Live product | https://ereditas.fly.dev/ |
+| Live product | https://app.ereditas.com/ |
 | Demo video (≤3 min) | VIDEO_URL |
 | Source | https://github.com/EdwinKestler/ereditas |
 | Explainer | https://edwinkestler.github.io/ereditas/ |

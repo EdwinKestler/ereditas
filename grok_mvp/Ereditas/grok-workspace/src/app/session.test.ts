@@ -68,7 +68,7 @@ function base(over: Partial<Snapshot> = {}): Snapshot {
       sam_model: "sam-3.1",
       vocab: [],
     },
-    index_note: "The ring is a watch index, not P(Z=1|x).",
+    index_note: "The ring measures silence, not death.",
     ...over,
   };
 }
