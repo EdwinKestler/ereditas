@@ -33,5 +33,10 @@ dist/
 # App Builder export
 *.zip
 
+# Demo-video renders and local narration
+video/out/
+video/voice/
+video/voice-es/
+
 # OS
 .DS_Store

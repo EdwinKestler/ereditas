@@ -1,5 +1,7 @@
 # How to test Ereditas (judges)
 
+**Demo video:** https://youtu.be/nwLoM5TS5Aw (English) · https://youtu.be/SY3nfJjo7tE (español)
+
 **Live companion:** https://app.ereditas.com/ (backup: https://ereditas.fly.dev/) · **Explainer:** https://ereditas.com/
 
 Each visitor gets a private demo session; other judges don't see your

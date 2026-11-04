@@ -6,6 +6,7 @@ Meta Global AI Developer Hackathon 2026 · Indie · Build for Your World
 
 | | |
 | --- | --- |
+| **Demo video** | https://youtu.be/nwLoM5TS5Aw (English, 2:13) · https://youtu.be/SY3nfJjo7tE (español) |
 | **Try it** | https://app.ereditas.com/ (backup: https://ereditas.fly.dev/) — two-minute walkthrough: [`docs/judges.md`](docs/judges.md) |
 | **Explainer** | https://ereditas.com/ |
 | **Meta models (live)** | SAM 3.1 · Muse Voice Transcribe · Muse Spark 1.3 |

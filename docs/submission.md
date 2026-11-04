@@ -1,24 +1,24 @@
 # Submission kit — Meta Global AI Developer Hackathon
 
-Draft 4 Nov 2026 09:00 GT. Deadline 9:00 PM ET = 8:00 PM GT. Internal cut 6:00 PM GT.
-Fill https://app.ereditas.com/ and `VIDEO_URL` once known. Voice-note lines marked [V] ship
-only if feat/voice-note merges.
+Final 4 Nov 2026. Deadline 9:00 PM ET = 8:00 PM GT.
 
 ## Links
 
 | Field | Value |
 | --- | --- |
 | Track / theme | Indie · Build for Your World |
-| Live product | https://app.ereditas.com/ |
-| Demo video (≤3 min) | VIDEO_URL |
+| Live product | https://app.ereditas.com/ (backup https://ereditas.fly.dev/) |
+| Demo video | https://youtu.be/nwLoM5TS5Aw (English, 2:13) |
+| Demo video (Spanish) | https://youtu.be/SY3nfJjo7tE (2:26) |
 | Source | https://github.com/EdwinKestler/ereditas |
 | Explainer | https://ereditas.com/ |
+| Judge guide | https://github.com/EdwinKestler/ereditas/blob/main/docs/judges.md |
 
 ## One-liner
 
 AI agents that carry out your digital will — only after the people you trust confirm you're gone.
 
-## Summary (≈170 words)
+## Summary (≈190 words)
 
 In 2008 my father died suddenly. I had to break into his phone to tell his
 clients, and into his email to cancel subscriptions and reach the people who
@@ -29,22 +29,28 @@ activity, Meta sessions, a $1 heartbeat. When silence grows, it checks the
 world: SAM 3.1 finds memorial objects (candles, ribbons, lilies) in posts
 from the owner's registered circle, and a Bayesian update scores the
 evidence. Crossing the threshold never unlocks anything; it only opens a
-WhatsApp question to trusted people. [V] When Ana answers with a voice note,
+WhatsApp question to trusted people. When Ana answers with a voice note,
 Muse Voice Transcribe and Muse Spark 1.3 interpret it — ambiguity escalates,
 never releases. Only a confirmed "passed" releases exactly what the owner
 chose (Drive, Facebook memorialization); wallet and bank wait for a second
 confirmer. Muse Spark then writes the heirs a plain letter.
 
-Built during the hackathon: FastAPI engine, React companion, live Meta Model
-API calls, offline test suite, deployed on Fly.io.
+Built during the hackathon: FastAPI engine, React companion with a guided
+demo, live Meta Model API calls, private per-visitor sessions and an offline
+test suite, deployed on Fly.io.
 
-## Meta models used
+## Meta models used (live)
 
 | Model | Id | Job |
 | --- | --- | --- |
 | SAM 3.1 | `sam-3.1` | Segment memorial objects in circle posts → evidence |
-| Muse Spark 1.3 | `muse-spark-1.3` | Heir letter after confirmation; [V] interpret the voice reply |
-| [V] Muse Voice Transcribe | see `settings.py` | Transcribe Ana's WhatsApp voice note |
+| Muse Voice Transcribe | `muse-voice-transcribe-1.0` | Transcribe Ana's WhatsApp voice note |
+| Muse Spark 1.3 | `muse-spark-1.3` | Interpret the reply (strict JSON); write the heir letter |
+
+## Video notes
+
+Narration is an AI voice (ElevenLabs); Ana's voice note is a real recording.
+Pipeline: `video/README.md`.
 
 ## 3-minute video script
 
