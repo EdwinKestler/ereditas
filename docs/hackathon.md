@@ -40,5 +40,7 @@ the key is present. TDD: `docs/releases/0.1.0/`.
 - Cerebral Valley submit form before 4 Nov 9:00 PM ET
 
 Public GitHub is live: https://github.com/EdwinKestler/ereditas.
+Project explainer (GitHub Pages, not the live product):
+https://edwinkestler.github.io/ereditas/
 Licence notes: `docs/license.md`. MIT is not required; the participant guide
 only requires a **public** repository.

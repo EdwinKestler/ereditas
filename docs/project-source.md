@@ -2,6 +2,7 @@
 
 - Grok project: https://grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f?tab=conversations
 - Public GitHub: https://github.com/EdwinKestler/ereditas (PolyForm Noncommercial 1.0.0 © 2026 Edwin Kestler)
+- Project explainer (GitHub Pages, not the live product): https://edwinkestler.github.io/ereditas/
 - Local repo: `/media/kestl/andor/github/ereditas`
 - Palimnex `project_id`: `4999764e-2d09-4fd4-b30d-1c20e318e2fa`
 - Palimnex `project_slug`: `ereditas`

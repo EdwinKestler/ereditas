@@ -16,3 +16,4 @@ Start here, then open the matching file. Palimnex indexes this folder.
 Product idea (local authority): [`../ideas/ereditas.md`](../ideas/ereditas.md).
 White paper: [`Ereditas-White-Paper.pdf`](Ereditas-White-Paper.pdf).
 Agent rules: [`../AGENTS.md`](../AGENTS.md).
+Project explainer: https://edwinkestler.github.io/ereditas/ (GitHub Pages; not the live product).

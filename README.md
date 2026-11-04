@@ -94,5 +94,7 @@ see [`.agents/skills/NOTICE.md`](.agents/skills/NOTICE.md).
 
 Public GitHub: https://github.com/EdwinKestler/ereditas
 
+Project explainer (not the live demo): https://edwinkestler.github.io/ereditas/
+
 Grok project (login required):
 https://grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f?tab=conversations
