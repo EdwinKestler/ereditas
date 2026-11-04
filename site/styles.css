@@ -263,3 +263,33 @@ footer { max-width: var(--max); margin: 0 auto; padding: 42px 24px; display: gri
 .try-steps strong { display: block; color: var(--ink); font-size: 15px; font-weight: 500; }
 .try-steps span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.5; }
 @media (max-width: 900px) { .try-steps { grid-template-columns: 1fr; } }
+
+/* ---- Why now: economic case ---- */
+.econ-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: clamp(28px, 4vw, 44px); }
+.econ-tile { display: flex; flex-direction: column; gap: 10px; padding: 24px 22px 20px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--paper-soft); }
+.econ-tile strong { font: 400 clamp(34px, 3.6vw, 48px)/1 var(--serif); color: var(--ink); letter-spacing: -.01em; }
+.econ-tile p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; flex: 1; }
+.econ-tile a, .econ-bars a, .econ-market a { color: var(--dim); font-size: 11px; letter-spacing: .04em; border-bottom: 1px solid var(--hairline); align-self: flex-start; }
+.econ-tile a:hover, .econ-bars a:hover, .econ-market a:hover { color: var(--gold-bright); }
+.econ-tile-lead { border-color: var(--line); background: linear-gradient(160deg, rgb(214 175 33 / .12), var(--paper-soft) 60%); }
+.econ-tile-lead strong { color: var(--gold-bright); }
+
+.econ-shift { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: 12px; padding: clamp(22px, 3vw, 32px); border: 1px solid var(--hairline); border-radius: 16px; }
+.econ-shift-kicker { display: block; color: var(--gold-bright); font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.econ-shift-copy p { margin: 12px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.econ-bars { display: grid; gap: 12px; }
+.econ-bars div { display: grid; grid-template-columns: 130px minmax(0, 1fr) 44px; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
+.econ-bars i { display: block; height: 10px; width: var(--w); border-radius: 999px; background: rgb(247 245 237 / .28); }
+.econ-bars i.is-gold { background: var(--gold); box-shadow: 0 0 14px rgb(214 175 33 / .35); }
+.econ-bars b { color: var(--ink); font-weight: 500; text-align: right; }
+
+.econ-market { margin-top: 12px; padding: 18px 22px; border-left: 2px solid var(--gold); background: var(--gold-soft); border-radius: 0 12px 12px 0; }
+.econ-market p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.econ-market strong { color: var(--ink); font-weight: 600; }
+.econ-market b { color: var(--gold-bright); font-weight: 600; }
+
+@media (max-width: 900px) {
+  .econ-grid { grid-template-columns: 1fr; }
+  .econ-shift { grid-template-columns: 1fr; }
+  .econ-bars div { grid-template-columns: 110px minmax(0, 1fr) 40px; }
+}
