@@ -13,8 +13,12 @@
 		X-Frame-Options "DENY"
 	}
 
+	# While the API and UI processes start after a machine boot, wait for
+	# them (up to 30 s) instead of answering 502.
 	handle /api/* {
 		reverse_proxy 127.0.0.1:8765 {
+			lb_try_duration 30s
+			lb_try_interval 250ms
 			transport http {
 				dial_timeout 5s
 				response_header_timeout 120s
@@ -23,12 +27,17 @@
 	}
 
 	handle /static/* {
-		reverse_proxy 127.0.0.1:8765
+		reverse_proxy 127.0.0.1:8765 {
+			lb_try_duration 30s
+			lb_try_interval 250ms
+		}
 	}
 
 	handle {
 		reverse_proxy 127.0.0.1:8081 {
 			header_up Host 127.0.0.1:8081
+			lb_try_duration 30s
+			lb_try_interval 250ms
 		}
 	}
 

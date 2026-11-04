@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { Seal } from "@/app/seal";
+import { GuidePanel } from "@/app/guide-panel";
 import {
   boxStyle,
   canAnswer,
@@ -52,9 +53,13 @@ export function Companion() {
   }, [tab]);
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col">
-        <header className="flex items-center gap-3 px-5 pt-6 pb-2">
+    <div className="companion-stage bg-paper text-ink">
+      <div className="phone-slot" aria-label="Ereditas companion phone">
+        <div className="phone-device">
+          <div className="phone-screen">
+            <div className="phone-app">
+      <div className="companion-root mx-auto flex min-h-screen w-full max-w-md flex-col">
+        <header className="companion-header flex items-center gap-3 px-5 pt-6 pb-2">
           <Seal className="size-11 text-gold" />
           <div className="min-w-0">
             <p className="font-display text-xl leading-none tracking-wide">Ereditas</p>
@@ -82,7 +87,7 @@ export function Companion() {
             </button>
           </div>
         </header>
-        <main className="flex-1 px-5 pt-3 pb-32">
+        <main className="companion-content flex-1 px-5 pt-3 pb-32">
           {offline && (
             <p className="mb-3 rounded-card border border-line bg-card px-4 py-3 text-sm text-gold">
               Companion engine is offline. Start it with ./scripts/run-companion.sh
@@ -116,6 +121,17 @@ export function Companion() {
           </div>
         </nav>
       </div>
+            </div>
+          </div>
+          <img
+            className="phone-bezel"
+            src="/bezel/iphone16-silver.png"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+      <GuidePanel />
       {film && (
         <div className="fixed inset-0 z-40 flex flex-col bg-scrim p-4">
           <div className="mx-auto flex w-full max-w-3xl items-center justify-between text-ink">
@@ -450,6 +466,9 @@ function Circle() {
           </div>
         </header>
         <div className="space-y-3 bg-paper px-4 py-4">
+          {s.voiceStage && (
+            <Bubble side="in">Playing Ana's voice note…</Bubble>
+          )}
           {!snap.tree_open && (
             <p className="text-sm text-gold">
               Tree closed. Evidence {snap.posterior_label} (bar 20%). Run the worked case to place the

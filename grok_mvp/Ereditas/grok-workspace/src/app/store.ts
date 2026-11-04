@@ -7,6 +7,7 @@ type State = {
   snap: Snapshot | null;
   tab: Tab;
   busy: boolean;
+  voiceStage: string | null;
   offline: boolean;
   setTab: (tab: Tab) => void;
   hydrate: () => Promise<void>;
@@ -36,12 +37,13 @@ export const useApp = create<State>((set, get) => {
       set({
         snap,
         busy: false,
+        voiceStage: null,
         offline: false,
         tab: tabAfter(path, snap, get().tab),
       });
       if (typeof window !== "undefined") window.scrollTo(0, 0);
     } catch {
-      set({ busy: false, offline: true });
+      set({ busy: false, voiceStage: null, offline: true });
     }
   };
 
@@ -49,6 +51,7 @@ export const useApp = create<State>((set, get) => {
     snap: null,
     tab: "pulse",
     busy: false,
+    voiceStage: null,
     offline: false,
     setTab: (tab) => set({ tab }),
     hydrate: () => run("/api/state", "GET"),
@@ -57,7 +60,19 @@ export const useApp = create<State>((set, get) => {
     worked: () => run("/api/worked-case"),
     message: () => run("/api/message"),
     answer: (answer) => run("/api/answer", "POST", { who: "Ana", answer }),
-    voiceAnswer: (clip) => run("/api/voice-answer", "POST", { who: "Ana", clip }),
+    voiceAnswer: (clip) => {
+      set({ voiceStage: "Playing Ana's note" });
+      if (typeof Audio !== "undefined") {
+        void new Audio(`/static/voice/${clip}.wav`).play().catch(() => {});
+      }
+      window.setTimeout(() => {
+        if (get().voiceStage) set({ voiceStage: "Muse Voice Transcribe" });
+      }, 1800);
+      window.setTimeout(() => {
+        if (get().voiceStage) set({ voiceStage: "Muse Spark" });
+      }, 5200);
+      return run("/api/voice-answer", "POST", { who: "Ana", clip });
+    },
     reset: () => run("/api/reset"),
   };
 });

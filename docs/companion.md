@@ -70,6 +70,31 @@ Demo owner: **Elena Reyes** (persona). Confirmer: **Ana** (primary heir).
 The ring is a watch index, not P(death). Silence does not open the vault.
 Human **passed** is the only release gate.
 
+## Guided demo
+
+At desktop widths of 1100 px and above, the Pure Minimal companion renders at a
+logical 390×844 inside the right-hand silver iPhone bezel, with the guide beside
+it. The screen scrolls inside the rounded phone clip and leaves safe space for
+the Dynamic Island. On narrower screens the existing full-screen companion is
+unchanged and the guide becomes a drawer immediately above the tab bar.
+
+`guideStep(snapshot)` is the pure server-backed state machine. Guide actions use
+the same Zustand/FastAPI methods as the app, so direct in-app actions remain in
+sync. Passed-only Vault and Wishes views are selected by the existing tab because
+those views do not mutate `DemoSession`. Back resets and rapidly replays only the
+actions needed for the preceding snapshot; it never replays a voice answer.
+
+The generated bezel is `public/bezel/iphone16-silver.png`. Vite/TanStack serves
+`public/` files from `/`, so production Caddy sends `/bezel/*` through the React
+route rather than FastAPI `/static`. Regenerate it from
+`grok_mvp/Ereditas/grok-workspace` with `python3 scripts/make_bezel.py`; crop and
+screen-rectangle constants are recorded in that script and `src/app/bezel.ts`.
+
+Both the guide choices and Circle voice buttons construct and play
+`/static/voice/<clip>.wav` inside the click handler, then start the API call. The
+thread shows a playback bubble while Muse Voice Transcribe and Muse Spark run;
+the returned `<audio controls>` remains available for replay.
+
 ## API
 
 All JSON. Snapshot shape is `DemoSession.snapshot()`.
