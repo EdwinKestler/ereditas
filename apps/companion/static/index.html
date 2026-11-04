@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ereditas companion</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="stage">
+    <aside class="rail">
+      <p class="eyebrow">Meta AI Hackathon · Indie</p>
+      <h1>Ereditas</h1>
+      <p class="lede">A liveness-gated digital estate. The ring is a watch index. Silence does not open the vault.</p>
+      <ol class="play">
+        <li>Advance quiet days until the chips go dark.</li>
+        <li>Scan news and the circle. SAM boxes memorial objects.</li>
+        <li>Run the worked case so the posterior can clear 20%.</li>
+        <li>On Circle, answer <em>passed</em>. Vault releases scope, not passwords.</li>
+      </ol>
+      <div class="desk-actions">
+        <button type="button" data-act="advance">Advance day</button>
+        <button type="button" data-act="scan">Scan</button>
+        <button type="button" data-act="worked">Worked case</button>
+        <button type="button" data-act="film">Film</button>
+        <button type="button" data-act="reset" class="ghost">Reset</button>
+      </div>
+      <p class="meta-flag" id="metaFlag">Model API: checking…</p>
+      <figure class="orch">
+        <img src="/static/system/orchestration.jpg" alt="Ereditas backend orchestration of Muse Spark, SAM 3.1, Voice, Image, and scoped vault release" />
+        <figcaption>Companion signals → Muse Spark + SAM 3.1 → human gate → scoped release</figcaption>
+      </figure>
+    </aside>
+
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="notch"></div>
+        <header class="top">
+          <span class="time">9:41</span>
+          <span class="status">●●● LTE</span>
+        </header>
+        <div class="brand">
+          <div class="seal" aria-hidden="true">🌳</div>
+          <div>
+            <strong>Ereditas</strong>
+            <small>Companion</small>
+          </div>
+          <button type="button" class="film-btn" data-act="film">Film</button>
+        </div>
+        <nav class="sub">
+          <button type="button" class="tab on" data-tab="pulse">Pulse</button>
+          <button type="button" class="tab" data-tab="circle">Circle</button>
+          <button type="button" class="tab" data-tab="vault">Vault</button>
+          <button type="button" class="tab" data-tab="wishes">Wishes</button>
+        </nav>
+
+        <main id="screen">
+          <section id="pulse" class="panel on">
+            <div class="ring-wrap">
+              <svg viewBox="0 0 120 120" class="ring">
+                <circle cx="60" cy="60" r="52" class="track" />
+                <circle cx="60" cy="60" r="52" class="progress" id="arc" />
+              </svg>
+              <div class="ring-label">
+                <span class="kicker" id="band">steady</span>
+                <span class="num" id="ring">11</span>
+                <span class="unit">watch index</span>
+              </div>
+            </div>
+            <p class="hint" id="indexNote">The ring is a watch index, not a death probability.</p>
+            <div class="chips">
+              <span class="chip" id="chip-device">Device</span>
+              <span class="chip" id="chip-meta">Meta</span>
+              <span class="chip" id="chip-heartbeat">$1 fee</span>
+            </div>
+            <dl class="stats">
+              <div><dt>Quiet days</dt><dd id="days">0</dd></div>
+              <div><dt>Posterior</dt><dd id="post">0.01%</dd></div>
+              <div><dt>Tree</dt><dd id="tree">closed</dd></div>
+            </dl>
+          </section>
+
+          <section id="circle" class="panel">
+            <p class="hint">Registered circle only. A stranger’s candle is ignored.</p>
+            <div id="posts" class="posts"></div>
+            <div class="wa" id="wa">
+              <header>WhatsApp · Ana</header>
+              <div class="msgs" id="msgs"></div>
+              <div class="replies">
+                <button type="button" data-answer="well">Well</button>
+                <button type="button" data-answer="unsure">Unsure</button>
+                <button type="button" data-answer="passed">Passed</button>
+              </div>
+            </div>
+          </section>
+
+          <section id="vault" class="panel">
+            <p class="hint">Google Password Manager stays the living source of truth. Ereditas classifies and, after a human gate, mints time-limited links.</p>
+            <article id="packet" class="packet hidden"></article>
+            <ul id="grants" class="grants"></ul>
+          </section>
+
+          <section id="wishes" class="panel">
+            <ul id="wishesList" class="wishes"></ul>
+            <p class="narrative" id="narrative"></p>
+          </section>
+        </main>
+
+        <p class="toast" id="toast" hidden></p>
+      </div>
+    </div>
+
+    <aside class="themes">
+      <p class="eyebrow">Theme templates</p>
+      <p class="lede">Same companion, five reads. Midnight is the hackathon default.</p>
+      <div class="theme-grid" id="themeGrid"></div>
+    </aside>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

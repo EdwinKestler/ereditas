@@ -1,0 +1,48 @@
+{
+  "project_slug": "ereditas",
+  "project_id": "4999764e-2d09-4fd4-b30d-1c20e318e2fa",
+  "cache_mode": "on",
+  "redis_socket_path": ".palimnex/redis/redis.sock",
+  "durable_ledger_path": ".palimnex/memory.sqlite3",
+  "include_patterns": [
+    "*.md",
+    "*.json",
+    "*.yaml",
+    "*.yml",
+    "docs/**/*.md",
+    "docs/**/*.txt",
+    "ideas/**/*.md",
+    "ideas/**/*.json",
+    "scripts/**/*.sh",
+    "scripts/**/*.py",
+    "src/**/*.py",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.rs",
+    "app/**/*.py",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "apps/**/*.md",
+    "apps/**/*.py",
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "apps/**/*.js",
+    "apps/**/*.json",
+    ".agents/skills/**/*.md",
+    ".github/workflows/*.yml",
+    ".github/workflows/*.yaml"
+  ],
+  "exclude_directories": [
+    ".palimnex",
+    ".ecc",
+    ".venv",
+    "node_modules",
+    "dist",
+    "build",
+    "vendor"
+  ],
+  "semantic_provider": {
+    "mode": "disabled"
+  }
+}

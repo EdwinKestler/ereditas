@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #0a0a0a;
+  --color-card: #141414;
+  --color-ink: #f7f7f4;
+  --color-muted: #bdbdb7;
+  --color-gold: #c9a227;
+  --color-line: rgb(201 162 39 / 0.4);
+  --color-track: rgb(201 162 39 / 0.28);
+  --color-scrim: #000000;
+  --font-display: "IBM Plex Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", "Helvetica Neue", system-ui, sans-serif;
+  --radius-card: 0.75rem;
+  --max-height-film: 70vh;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(6px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 180ms ease-out;
+}
+
+.nav-bar {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}

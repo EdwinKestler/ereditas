@@ -1,0 +1,37 @@
+# Palimnex runtime state, memory packs and key files
+.palimnex/
+*.pmem
+*.key
+
+# ECC Memory Vault (not installed; keep an accidental init out of Git)
+.ecc/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# JS / Grok workspace
+node_modules/
+dist/
+.output/
+.nitro/
+.tanstack/
+*.log
+
+# App Builder export
+*.zip
+
+# OS
+.DS_Store

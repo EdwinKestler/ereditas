@@ -1,0 +1,140 @@
+# Companion — operator notes
+
+Chosen judge UI: the Pure Minimal Grok shell on **http://127.0.0.1:8080**.
+Python FastAPI on **http://127.0.0.1:8765** owns Algorithm 1, Algorithm 2,
+SAM 3.1, and Muse Spark 1.3. Product idea: `ideas/ereditas.md`. TDD:
+`docs/releases/0.1.0/`.
+
+## Two processes
+
+| Process | Path | Port | Job |
+| --- | --- | --- | --- |
+| FastAPI | `./scripts/run-companion.sh` | `127.0.0.1:8765` | `DemoSession`, watch posterior, vault, Meta API, memorial images |
+| Vite | `grok_mvp/Ereditas/grok-workspace` `npm run dev` | `0.0.0.0:8080` | Pure Minimal React shell (Pulse, Watch, Circle, Vault, Wishes) |
+
+Vite proxies `/api` and `/static` to FastAPI. CORS also allows the Grok origin
+so a direct browser call would work. Keep both processes up while the Grok
+shell is open. The FastAPI HTML at `:8765` (five CSS themes) is the earlier
+static companion; it is not the chosen demo chrome.
+
+`DemoSession` in `src/ereditas/demo.py` is the source of truth. Zustand in
+`grok_mvp/Ereditas/grok-workspace/src/app/store.ts` is a thin client.
+
+## Run
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+cp .env.example .env   # fill locally; never commit; never read .env in Palimnex
+./scripts/run-companion.sh
+```
+
+Second terminal:
+
+```bash
+cd grok_mvp/Ereditas/grok-workspace
+npm install
+npm run dev
+```
+
+Open http://127.0.0.1:8080. Health (booleans and model names only):
+
+```bash
+curl -fsS http://127.0.0.1:8080/api/health
+```
+
+Reset the demo to rest (ring 11, tree closed):
+
+```bash
+curl -fsS -X POST http://127.0.0.1:8765/api/reset
+```
+
+## Play path (judge)
+
+Demo owner: **Elena Reyes** (persona). Confirmer: **Ana** (primary heir).
+
+1. Pulse at rest: watch index **11**, band **steady**, tree closed.
+2. Wait two quiet days, then Scan. Watch paints SAM boxes on candle, ribbon,
+   and lilies. Posterior stays under the 20% bar (~6.95%). Tree stays closed.
+   WhatsApp is refused.
+3. Run the **worked case** (white paper Table 4: 10 silent days, one heartbeat
+   miss, obituary, three memorial posts). Tree opens (~95.98%).
+4. Circle → Send WhatsApp → Ana **passed**.
+5. Vault releases **Drive + Facebook** only (`ereditas://grant/` links, no
+   credentials). Wallet and bank stay **Hold** until a second confirmer.
+   Wishes check off the released scopes. Muse Spark writes the heir narrative.
+
+The ring is a watch index, not P(death). Silence does not open the vault.
+Human **passed** is the only release gate.
+
+## API
+
+All JSON. Snapshot shape is `DemoSession.snapshot()`.
+
+| Method | Path | Effect |
+| --- | --- | --- |
+| GET | `/api/health` | `ok`, `meta_configured`, model names |
+| GET | `/api/state` | current snapshot |
+| POST | `/api/reset` | rest (Elena, tree closed) |
+| POST | `/api/advance` | `{ "days": 1 }` quiet days (1–14) |
+| POST | `/api/scan` | news + SAM 3.1 on circle posts |
+| POST | `/api/worked-case` | Table 4 episode, then scan |
+| POST | `/api/message` | outbound WhatsApp if `tree_open` |
+| POST | `/api/answer` | `{ "who": "Ana", "answer": "well\|unsure\|passed" }` |
+| POST | `/api/theme` | FastAPI static theme only (`midnight` default) |
+| GET | `/static/memorial/*.jpg` | SAM source images |
+
+CORS allowlist: `http://127.0.0.1:8080`, `http://localhost:8080`.
+
+## Meta Model API
+
+Live calls when `META_API_KEY` or `MODEL_API_KEY` is set and
+`EREDITAS_OFFLINE` is unset. Tests force `EREDITAS_OFFLINE=1` in
+`tests/conftest.py` so pytest never hits the live API.
+
+| Model | Id | Use |
+| --- | --- | --- |
+| Muse Spark 1.3 | `muse-spark-1.3` | heir narrative after `passed` |
+| SAM 3.1 | `sam-3.1` | noun-phrase segment of memorial objects |
+
+SAM prompt is a noun phrase. Boxes parse from `<|box;x1=…|>` and are stored
+as 0–1 fractions. The Grok mapper `boxStyle` turns them into CSS percents.
+Mock boxes run when offline or unconfigured.
+
+## Tests
+
+```bash
+EREDITAS_OFFLINE=1 .venv/bin/pytest -q --cov=ereditas
+cd grok_mvp/Ereditas/grok-workspace
+node --experimental-strip-types --test src/app/session.test.ts
+```
+
+`companion.py` is omitted from coverage (`pyproject.toml`) because the live
+FastAPI process loads `.env`. Snapshot dumps must not contain credentials
+(`password` as a secret, `seed phrase`, `meta_api_key`, `hf_token`,
+`modal_token`). Copy may mention “Google Password Manager” as the living
+source of truth.
+
+## Secrets
+
+- Template: `.env.example`. Runtime: `.env` (gitignored).
+- Do not read or write `.env`. Do not put keys in Git or Palimnex payloads.
+- Health reports configuration as booleans.
+
+## Layout
+
+| Path | Role |
+| --- | --- |
+| `src/ereditas/liveness.py` | Algorithm 1, `CALL_THRESHOLD = 0.20` |
+| `src/ereditas/vault.py` | Algorithm 2, scoped grants |
+| `src/ereditas/confirmation.py` | well / unsure / passed tree |
+| `src/ereditas/meta.py` | Muse Spark + SAM 3.1 |
+| `src/ereditas/demo.py` | `DemoSession` |
+| `src/ereditas/companion.py` | FastAPI |
+| `apps/companion/static/` | memorial images, five theme cards, older HTML UI |
+| `grok_mvp/Ereditas/grok-workspace/src/app/` | Pure Minimal shell |
+| `grok_mvp/Ereditas/grok-workspace/src/styles.css` | tokens |
+| `grok_mvp/Ereditas/grok-workspace/screenshots/merge/` | Chrome play-loop |
+
+Pure Minimal tokens: paper `#0a0a0a`, card `#141414`, ink `#f7f7f4`, muted
+`#bdbdb7`, gold `#c9a227`, IBM Plex Sans, radius `0.75rem`.

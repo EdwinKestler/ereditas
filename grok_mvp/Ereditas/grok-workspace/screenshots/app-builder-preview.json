@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Ereditas",
+      "hasCanvas": false,
+      "bodyTextLen": 380,
+      "bodyTextHash": "362961d4dc374d2d117fe97e2888aaa87b3522980ca68f4c54c507350d20b03b",
+      "bodyTextPrefix": "Ereditas COMPANION Demo Good morning The watch is quiet. 11 STEA",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Ereditas",
+      "hasCanvas": false,
+      "bodyTextLen": 380,
+      "bodyTextHash": "362961d4dc374d2d117fe97e2888aaa87b3522980ca68f4c54c507350d20b03b",
+      "bodyTextPrefix": "Ereditas COMPANION Demo Good morning The watch is quiet. 11 STEA",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

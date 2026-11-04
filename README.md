@@ -1,0 +1,83 @@
+# Ereditas
+
+Local workspace for the Grok project idea at
+[grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f](https://grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f?tab=conversations).
+
+Product: a liveness-gated digital estate companion. Idea:
+[`ideas/ereditas.md`](ideas/ereditas.md). How to run:
+[`docs/companion.md`](docs/companion.md). White paper:
+[`docs/Ereditas-White-Paper.pdf`](docs/Ereditas-White-Paper.pdf). Hackathon
+notes: [`docs/hackathon.md`](docs/hackathon.md). Doc index:
+[`docs/README.md`](docs/README.md).
+
+## Companion
+
+Two processes. Python owns the algorithms and Meta Model API. The judge UI is
+the Pure Minimal Grok shell.
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+cp .env.example .env   # fill locally; never commit
+.venv/bin/pytest
+./scripts/run-companion.sh
+```
+
+Second terminal:
+
+```bash
+cd grok_mvp/Ereditas/grok-workspace && npm install && npm run dev
+```
+
+Open **http://127.0.0.1:8080**. Vite proxies `/api` and `/static` to FastAPI
+on `:8765`. Pulse, Watch, Circle, Vault, Wishes. The ring is a watch index.
+Release requires a human **passed**. Demo owner: Elena Reyes.
+
+The FastAPI HTML at http://127.0.0.1:8765 still serves the five theme cards.
+
+## Palimnex
+
+Palimnex 2.9.0 is the repository-local memory layer for humans and coding
+agents. Search it for methods, examples, tools, and guidelines instead of
+rereading the whole tree.
+
+```bash
+./scripts/palimnex-setup.sh
+palimnex status
+palimnex search "ereditas" --limit 8
+```
+
+Operator notes: `docs/palimnex.md`. Agent skill: `.agents/skills/source-cache/SKILL.md`.
+
+## ECC workflow skills
+
+A thin ECC v2.2.3 skill pack lives under `.agents/skills/` (search-first,
+plan-canvas, tdd-workflow, security-review, security-scan, safety-guard,
+codebase-onboarding). Palimnex remains the memory layer. Notes: `docs/ecc.md`.
+
+```bash
+npx ecc-agentshield@1.6.0 scan --path /media/kestl/andor/github/ereditas
+```
+
+## Layout
+
+| Path | What belongs here |
+| --- | --- |
+| `ideas/` | Product proposals (local authority) |
+| `docs/` | Operator notes, Palimnex, ECC, TDD evidence |
+| `docs/plans/` | Human-reviewed plan artifacts |
+| `src/ereditas/` | Algorithms, Meta stack, FastAPI |
+| `tests/` | pytest (`EREDITAS_OFFLINE=1`) |
+| `apps/companion/static/` | Memorial images, theme cards, older HTML UI |
+| `grok_mvp/Ereditas/grok-workspace/` | Pure Minimal React shell (`:8080`) |
+| `scripts/` | Palimnex setup and `run-companion.sh` |
+| `.agents/skills/` | Palimnex skill plus vendored ECC skills |
+| `.palimnex.json` | Palimnex project config (commit this) |
+| `.palimnex/` | Runtime ledger and Redis (gitignored) |
+| `.ecc/` | ECC Memory Vault if ever opted in (gitignored) |
+| `AGENTS.md` | Instructions for coding agents |
+
+## Source
+
+Grok project (login required):
+https://grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f?tab=conversations
