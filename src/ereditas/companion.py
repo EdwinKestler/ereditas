@@ -5,20 +5,22 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from ereditas.demo import DemoSession
+from ereditas.meta import MetaStack
+from ereditas.sessions import SessionHandle, SessionStore
 from ereditas.settings import Settings
 
 ROOT = Path(__file__).resolve().parents[2]
 STATIC = ROOT / "apps" / "companion" / "static"
 
 settings = Settings()
-session = DemoSession(settings)
+meta = MetaStack(settings)
+sessions = SessionStore(settings=settings, meta=meta)
 
 app = FastAPI(title="Ereditas companion", version="0.2.0")
 app.add_middleware(
@@ -53,6 +55,30 @@ class AdvanceBody(BaseModel):
     days: int = Field(default=1, ge=1, le=14)
 
 
+def _is_https(request: Request) -> bool:
+    forwarded = request.headers.get("fly-forwarded-proto") or request.headers.get(
+        "x-forwarded-proto"
+    )
+    if forwarded and forwarded.split(",", 1)[0].strip().lower() == "https":
+        return True
+    return request.url.scheme == "https"
+
+
+def visitor_session(request: Request, response: Response) -> SessionHandle:
+    handle = sessions.resolve(request.cookies.get("ereditas_sid"))
+    if handle.created:
+        response.set_cookie(
+            key="ereditas_sid",
+            value=handle.sid,
+            max_age=6 * 60 * 60,
+            path="/",
+            secure=_is_https(request),
+            httponly=True,
+            samesite="lax",
+        )
+    return handle
+
+
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(STATIC / "index.html")
@@ -72,53 +98,74 @@ def health() -> dict:
 
 
 @app.get("/api/state")
-def state() -> dict:
-    return session.snapshot()
+def state(handle: SessionHandle = Depends(visitor_session)) -> dict:
+    with handle.lock:
+        return handle.session.snapshot()
 
 
 @app.post("/api/reset")
-def reset() -> dict:
-    session.reset()
-    return session.snapshot()
+def reset(handle: SessionHandle = Depends(visitor_session)) -> dict:
+    with handle.lock:
+        handle.session.reset()
+        return handle.session.snapshot()
 
 
 @app.post("/api/advance")
-def advance(body: AdvanceBody | None = None) -> dict:
+def advance(
+    body: AdvanceBody | None = None,
+    handle: SessionHandle = Depends(visitor_session),
+) -> dict:
     days = body.days if body else 1
-    return session.advance(days)
+    with handle.lock:
+        return handle.session.advance(days)
 
 
 @app.post("/api/scan")
-def scan() -> dict:
-    return session.scan()
+def scan(handle: SessionHandle = Depends(visitor_session)) -> dict:
+    with handle.lock:
+        return handle.session.scan()
 
 
 @app.post("/api/message")
-def message() -> dict:
-    return session.message()
+def message(handle: SessionHandle = Depends(visitor_session)) -> dict:
+    with handle.lock:
+        return handle.session.message()
 
 
 @app.post("/api/worked-case")
-def worked_case() -> dict:
-    return session.worked_case()
+def worked_case(handle: SessionHandle = Depends(visitor_session)) -> dict:
+    with handle.lock:
+        return handle.session.worked_case()
 
 
 @app.post("/api/answer")
-def answer(body: AnswerBody) -> dict:
-    return session.answer(body.who, body.answer)
+def answer(
+    body: AnswerBody,
+    handle: SessionHandle = Depends(visitor_session),
+) -> dict:
+    with handle.lock:
+        return handle.session.answer(body.who, body.answer)
 
 
 @app.post("/api/voice-answer")
-def voice_answer(body: VoiceAnswerBody) -> dict:
-    return session.voice_answer(body.who, body.clip)
+def voice_answer(
+    body: VoiceAnswerBody,
+    handle: SessionHandle = Depends(visitor_session),
+) -> dict:
+    with handle.lock:
+        return handle.session.voice_answer(body.who, body.clip)
 
 
 @app.post("/api/theme")
-def theme(body: ThemeBody) -> dict:
+def theme(
+    body: ThemeBody,
+    handle: SessionHandle = Depends(visitor_session),
+) -> dict:
     if body.theme not in THEMES:
         raise HTTPException(status_code=400, detail="unknown theme")
-    session.theme = body.theme
-    return session.snapshot()
+    with handle.lock:
+        handle.session.theme = body.theme
+        return handle.session.snapshot()
 
 
 def main() -> None:

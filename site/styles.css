@@ -255,3 +255,11 @@ footer { max-width: var(--max); margin: 0 auto; padding: 42px 24px; display: gri
   .smap-gate::before { top: 50%; bottom: auto; left: 0; right: 0; width: auto; height: 3px; transform: translateY(-50%); }
   .smap-gate span { writing-mode: horizontal-tb; transform: none; padding: 6px 12px; white-space: normal; text-align: center; }
 }
+
+/* ---- Try it ---- */
+.try-steps { counter-reset: step; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: clamp(28px, 4vw, 44px) 0 32px; padding: 0; list-style: none; }
+.try-steps li { counter-increment: step; position: relative; padding: 46px 18px 18px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--paper-soft); }
+.try-steps li::before { content: counter(step, decimal-leading-zero); position: absolute; top: 16px; left: 18px; color: var(--gold); font-size: 11px; letter-spacing: .12em; }
+.try-steps strong { display: block; color: var(--ink); font-size: 15px; font-weight: 500; }
+.try-steps span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+@media (max-width: 900px) { .try-steps { grid-template-columns: 1fr; } }

@@ -1,11 +1,81 @@
 import json
+import threading
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
 import httpx
+import openai
 
 from ereditas.meta import MetaStack, _parse_boxes
 from ereditas.settings import Settings
+
+
+def _run_together(callable_):
+    gate = threading.Barrier(3)
+    results = []
+
+    def worker():
+        gate.wait()
+        results.append(callable_())
+
+    threads = [threading.Thread(target=worker) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    gate.wait()
+    for thread in threads:
+        thread.join(timeout=2)
+        assert not thread.is_alive()
+    return results
+
+
+def test_shared_stack_constructs_only_one_client_under_concurrency(monkeypatch):
+    created = []
+
+    def fake_openai(**_kwargs):
+        time.sleep(0.05)
+        client = object()
+        created.append(client)
+        return client
+
+    monkeypatch.setattr(openai, "OpenAI", fake_openai)
+    stack = MetaStack(
+        Settings(_env_file=None, meta_api_key="test-key", model_api_key="")
+    )
+
+    clients = _run_together(stack.client)
+
+    assert len(created) == 1
+    assert clients == [created[0], created[0]]
+
+
+def test_shared_sam_cache_makes_one_call_under_concurrency(
+    tmp_path: Path, monkeypatch
+):
+    image = tmp_path / "candle.jpg"
+    image.write_bytes(b"not-a-real-jpeg")
+
+    class FakeResponses:
+        def __init__(self):
+            self.calls = 0
+
+        def create(self, **_kwargs):
+            self.calls += 1
+            time.sleep(0.05)
+            return SimpleNamespace(output_text="")
+
+    responses = FakeResponses()
+    fake_client = SimpleNamespace(responses=responses)
+    monkeypatch.delenv("EREDITAS_OFFLINE", raising=False)
+    stack = MetaStack(
+        Settings(_env_file=None, meta_api_key="test-key", model_api_key="")
+    )
+    monkeypatch.setattr(stack, "client", lambda: fake_client)
+
+    results = _run_together(lambda: stack.segment_image(image, "candle"))
+
+    assert responses.calls == 1
+    assert results[0] is results[1]
 
 
 def test_parse_sam_grammar_normalizes_inclusive_box():

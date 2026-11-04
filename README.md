@@ -1,9 +1,35 @@
 # Ereditas
 
-Local workspace for the Grok project idea at
+**AI agents that carry out your digital will — only after the people you trust confirm you're gone.**
+
+Meta Global AI Developer Hackathon 2026 · Indie · Build for Your World
+
+| | |
+| --- | --- |
+| **Try it** | https://ereditas.fly.dev/ — two-minute walkthrough: [`docs/judges.md`](docs/judges.md) |
+| **Explainer** | https://edwinkestler.github.io/ereditas/ |
+| **Meta models (live)** | SAM 3.1 · Muse Voice Transcribe · Muse Spark 1.3 |
+
+> In 2008 my father died suddenly. To tell his clients what had happened, I
+> had to break into his phone. To cancel his subscriptions and reach the
+> people who mattered, I had to get into his email. His documents and photos
+> sat behind passwords no one had. The legal succession took years; his
+> digital life couldn't wait. Back then, automating that was impossible.
+> Today, it isn't. — Edwin Kestler
+
+![How Ereditas works and where Meta does the work](site/assets/system-map.png)
+
+Meta's apps carry the signals and the question (Facebook and Instagram
+memorial posts, WhatsApp). Meta's models turn photos and voices into
+evidence. Only a person opens the gate; release is scoped, time-limited and
+never includes passwords.
+
+## Repository
+
+Idea source: the Grok project at
 [grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f](https://grok.com/project/571a21c7-4a9d-42d9-8706-9e5c51dd6e7f?tab=conversations).
 
-Product: a liveness-gated digital estate companion. Idea:
+Product: a human-confirmed digital estate companion. Idea:
 [`ideas/ereditas.md`](ideas/ereditas.md). How to run:
 [`docs/companion.md`](docs/companion.md). White paper:
 [`docs/Ereditas-White-Paper.pdf`](docs/Ereditas-White-Paper.pdf). Hackathon
@@ -36,10 +62,9 @@ on `:8765`. Pulse, Watch, Circle, Vault, Wishes. The ring is a watch index.
 Release requires a human **passed**. Demo owner: Elena Reyes.
 
 The bundled Spanish voice notes live under `apps/companion/static/voice/`.
-They are offline TTS fixtures for the demo. Edwin can replace them with real
-recordings while keeping the `ana-passed.wav` and `ana-unsure.wav` filenames;
-use mono 16-bit PCM WAV at 16 kHz or 24 kHz so the live Muse Voice Transcribe
-file endpoint accepts them without conversion.
+They are real recordings (mono 16-bit PCM WAV, 24 kHz). To replace them, keep
+the `ana-passed.wav` and `ana-unsure.wav` filenames and the same format so the
+live Muse Voice Transcribe file endpoint accepts them without conversion.
 
 The FastAPI HTML at http://127.0.0.1:8765 still serves the five theme cards.
 

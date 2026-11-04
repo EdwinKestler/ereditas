@@ -44,7 +44,7 @@ Open http://127.0.0.1:8080. Health (booleans and model names only):
 curl -fsS http://127.0.0.1:8080/api/health
 ```
 
-Reset the demo to rest (ring 11, tree closed):
+Reset the current visitor's demo to rest (ring 11, tree closed):
 
 ```bash
 curl -fsS -X POST http://127.0.0.1:8765/api/reset
@@ -76,9 +76,9 @@ All JSON. Snapshot shape is `DemoSession.snapshot()`.
 
 | Method | Path | Effect |
 | --- | --- | --- |
-| GET | `/api/health` | `ok`, `meta_configured`, model names |
-| GET | `/api/state` | current snapshot |
-| POST | `/api/reset` | rest (Elena, tree closed) |
+| GET | `/api/health` | `ok`, `meta_configured`, model names; no session cookie |
+| GET | `/api/state` | current visitor snapshot; creates a session when needed |
+| POST | `/api/reset` | reset only the current visitor to rest (Elena, tree closed) |
 | POST | `/api/advance` | `{ "days": 1 }` quiet days (1–14) |
 | POST | `/api/scan` | news + SAM 3.1 on circle posts |
 | POST | `/api/worked-case` | Table 4 episode, then scan |
@@ -90,6 +90,24 @@ All JSON. Snapshot shape is `DemoSession.snapshot()`.
 | GET | `/static/voice/*.wav` | bundled Spanish voice-note fixtures |
 
 CORS allowlist: `http://127.0.0.1:8080`, `http://localhost:8080`.
+
+## Visitor sessions
+
+Every `/api/*` route except health resolves an in-memory `DemoSession` from the
+`ereditas_sid` cookie. Missing, malformed, expired, and valid-but-unknown IDs
+receive a new server-generated `secrets.token_urlsafe(18)` ID; caller-provided
+IDs are never adopted as store keys. The cookie is HttpOnly, SameSite=Lax,
+Path `/`, has a six-hour Max-Age, and is Secure when the request arrived over
+HTTPS (including Caddy/Fly forwarded-proto headers).
+
+Sessions expire after two idle hours. The store holds at most 300 and evicts
+the least recently used entry before admitting another. Each session has its
+own mutation lock, while every `DemoSession` shares one thread-safe `MetaStack`,
+one lazy Meta client, and one SAM segment cache. The store is process-local and
+intentionally ephemeral: a process restart starts every visitor at Elena,
+ring 11, tree closed. Vite and Caddy forward Cookie and Set-Cookie without
+special header rewriting; the React client explicitly uses same-origin
+credentials.
 
 ## Meta Model API
 
@@ -150,6 +168,7 @@ source of truth.
 | `src/ereditas/confirmation.py` | well / unsure / passed tree |
 | `src/ereditas/meta.py` | Muse Spark + SAM 3.1 |
 | `src/ereditas/demo.py` | `DemoSession` |
+| `src/ereditas/sessions.py` | bounded visitor-session store, TTL, LRU, locks |
 | `src/ereditas/companion.py` | FastAPI |
 | `apps/companion/static/` | memorial images, five theme cards, older HTML UI |
 | `grok_mvp/Ereditas/grok-workspace/src/app/` | Pure Minimal shell |

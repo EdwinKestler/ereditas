@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
+  api,
   boxStyle,
   canAnswer,
   canMessage,
@@ -11,6 +12,28 @@ import {
   voiceBadge,
   type Snapshot,
 } from "./session.ts";
+
+describe("api", () => {
+  it("sends the visitor cookie on same-origin companion requests", async () => {
+    const originalFetch = globalThis.fetch;
+    let credentials: RequestCredentials | undefined;
+    globalThis.fetch = (async (_input: string | URL | Request, init?: RequestInit) => {
+      credentials = init?.credentials;
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+
+    try {
+      await api<{ ok: boolean }>("/api/health");
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+
+    assert.equal(credentials, "same-origin");
+  });
+});
 
 function base(over: Partial<Snapshot> = {}): Snapshot {
   return {

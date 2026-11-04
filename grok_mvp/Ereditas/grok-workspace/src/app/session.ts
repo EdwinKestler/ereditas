@@ -138,6 +138,7 @@ export async function api<T = Snapshot>(
 ): Promise<T> {
   const response = await fetch(path, {
     method,
+    credentials: "same-origin",
     headers: body ? { "Content-Type": "application/json" } : undefined,
     body: body ? JSON.stringify(body) : undefined,
   });

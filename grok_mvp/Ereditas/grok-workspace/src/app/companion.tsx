@@ -38,6 +38,8 @@ export function Companion() {
   const tab = useApp((s) => s.tab);
   const setTab = useApp((s) => s.setTab);
   const hydrate = useApp((s) => s.hydrate);
+  const reset = useApp((s) => s.reset);
+  const busy = useApp((s) => s.busy);
   const offline = useApp((s) => s.offline);
   const [film, setFilm] = useState(false);
 
@@ -58,14 +60,27 @@ export function Companion() {
             <p className="font-display text-xl leading-none tracking-wide">Ereditas</p>
             <p className="mt-1 text-xs tracking-widest text-muted uppercase">Companion</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setFilm(true)}
-            className="ml-auto flex h-11 items-center gap-2 rounded-full bg-ink px-4 text-sm text-paper"
-          >
-            <Play className="size-4" strokeWidth={1.8} />
-            Film
-          </button>
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setTab("pulse");
+                void reset();
+              }}
+              disabled={busy}
+              className="h-11 rounded-full border border-line px-3 text-xs text-muted disabled:opacity-40"
+            >
+              Start fresh
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilm(true)}
+              className="flex h-11 items-center gap-2 rounded-full bg-ink px-3 text-sm text-paper"
+            >
+              <Play className="size-4" strokeWidth={1.8} />
+              Film
+            </button>
+          </div>
         </header>
         <main className="flex-1 px-5 pt-3 pb-32">
           {offline && (
@@ -156,6 +171,9 @@ function Pulse() {
         <p className="text-sm text-muted">Good morning</p>
         <h1 className="font-display text-3xl leading-tight">{heading}</h1>
       </div>
+      <p className="text-xs leading-relaxed text-muted">
+        This is your own demo session — other visitors don't see your changes.
+      </p>
       <Gauge pct={snap.ring} tone={tone} />
       <p className="text-center text-sm text-muted">
         {snap.index_note} Posterior {snap.posterior_label}. Tree {snap.tree_open ? "open" : "closed"}.

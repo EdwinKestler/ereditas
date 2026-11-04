@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import re
+import threading
 import unicodedata
 from pathlib import Path
 from typing import Any
@@ -197,7 +198,9 @@ class MetaStack:
     def __init__(self, settings: Settings | None = None) -> None:
         self.settings = settings or Settings()
         self._client = None
+        self._client_lock = threading.Lock()
         self._segment_cache: dict[tuple[str, str], dict[str, Any]] = {}
+        self._segment_lock = threading.Lock()
 
     @property
     def configured(self) -> bool:
@@ -207,13 +210,15 @@ class MetaStack:
         if not self.configured:
             return None
         if self._client is None:
-            from openai import OpenAI
+            with self._client_lock:
+                if self._client is None:
+                    from openai import OpenAI
 
-            self._client = OpenAI(
-                base_url=self.settings.model_api_base_url,
-                api_key=self.settings.api_key,
-                timeout=30.0,
-            )
+                    self._client = OpenAI(
+                        base_url=self.settings.model_api_base_url,
+                        api_key=self.settings.api_key,
+                        timeout=30.0,
+                    )
         return self._client
 
     def _mock_transcript(self, audio_path: Path) -> str:
@@ -364,8 +369,17 @@ class MetaStack:
         """SAM 3.1 if a key is present; otherwise the mock box for the label."""
         label = label.lower()
         cache_key = (str(image_path), label)
-        if cache_key in self._segment_cache:
-            return self._segment_cache[cache_key]
+        with self._segment_lock:
+            cached = self._segment_cache.get(cache_key)
+            if cached is not None:
+                return cached
+            result = self._segment_image_uncached(image_path, label)
+            self._segment_cache[cache_key] = result
+            return result
+
+    def _segment_image_uncached(
+        self, image_path: Path, label: str
+    ) -> dict[str, Any]:
         fallback = [dict(MOCK_BOXES.get(label, MOCK_BOXES["candle"]))]
         client = self.client()
         if (
@@ -373,9 +387,7 @@ class MetaStack:
             or client is None
             or not image_path.exists()
         ):
-            result = {"source": "mock", "boxes": fallback, "model": None}
-            self._segment_cache[cache_key] = result
-            return result
+            return {"source": "mock", "boxes": fallback, "model": None}
         try:
             response = client.responses.create(
                 model=self.settings.sam_model,
@@ -399,18 +411,18 @@ class MetaStack:
             )
             text = getattr(response, "output_text", None) or ""
             boxes = _parse_boxes(text, label)
-            result = {
+            return {
                 "source": "sam-3.1",
                 "boxes": boxes,
                 "model": self.settings.sam_model,
             }
-            self._segment_cache[cache_key] = result
-            return result
         except Exception as exc:  # noqa: BLE001 — demo must survive API errors
             log.warning("SAM fallback to mock boxes (%s)", type(exc).__name__)
-            result = {"source": "mock", "boxes": fallback, "model": self.settings.sam_model}
-            self._segment_cache[cache_key] = result
-            return result
+            return {
+                "source": "mock",
+                "boxes": fallback,
+                "model": self.settings.sam_model,
+            }
 
     def heir_narrative(self, confirmer: str, assets: list[str]) -> str:
         names = ", ".join(assets) if assets else "the classified grants"

@@ -2,13 +2,13 @@ import json
 
 from fastapi.testclient import TestClient
 
-from ereditas.companion import app, session
+from ereditas.companion import app, sessions
 
 SECRET_NEEDLES = ("password", "seed phrase", "meta_api_key", "hf_token", "modal_token")
 
 
 def setup_function() -> None:
-    session.reset()
+    sessions.clear()
 
 
 def test_health_and_home():
@@ -23,6 +23,82 @@ def test_health_and_home():
     home = client.get("/")
     assert home.status_code == 200
     assert b"Ereditas" in home.content
+
+
+def test_health_does_not_create_a_session_cookie():
+    client = TestClient(app)
+
+    response = client.get("/api/health")
+
+    assert response.status_code == 200
+    assert "set-cookie" not in response.headers
+
+
+def test_first_api_request_sets_a_private_six_hour_cookie():
+    client = TestClient(app)
+
+    response = client.get("/api/state", headers={"X-Forwarded-Proto": "https"})
+
+    cookie = response.headers["set-cookie"]
+    assert "ereditas_sid=" in cookie
+    assert "HttpOnly" in cookie
+    assert "Max-Age=21600" in cookie
+    assert "Path=/" in cookie
+    assert "SameSite=lax" in cookie
+    assert "Secure" in cookie
+
+
+def test_malformed_and_unknown_session_cookies_are_replaced():
+    malformed = TestClient(app)
+    malformed.cookies.set(
+        "ereditas_sid", "../../not-a-session", domain="testserver.local", path="/"
+    )
+
+    malformed_response = malformed.get("/api/state")
+    malformed_sid = malformed.cookies.get("ereditas_sid")
+
+    assert malformed_response.status_code == 200
+    assert malformed_sid != "../../not-a-session"
+    assert malformed_sid is not None
+    assert len(malformed_sid) == 24
+
+    unknown = TestClient(app)
+    unknown.cookies.set(
+        "ereditas_sid", "A" * 24, domain="testserver.local", path="/"
+    )
+
+    unknown_response = unknown.get("/api/state")
+
+    assert unknown_response.status_code == 200
+    assert unknown.cookies.get("ereditas_sid") != "A" * 24
+
+
+def test_clients_have_isolated_sessions_and_reset_only_the_caller():
+    client_a = TestClient(app)
+    client_b = TestClient(app)
+
+    client_a.post("/api/advance", json={"days": 2})
+    client_a.post("/api/scan")
+    opened = client_a.post("/api/worked-case").json()
+    assert opened["tree_open"] is True
+    passed = client_a.post(
+        "/api/answer", json={"who": "Ana", "answer": "passed"}
+    ).json()
+    assert passed["may_release"] is True
+
+    resting = client_b.get("/api/state").json()
+    assert resting["days"] == 0
+    assert resting["ring"] == 11
+    assert resting["tree_open"] is False
+    assert resting["packet"] is None
+
+    client_b.post("/api/advance", json={"days": 1})
+    reset_a = client_a.post("/api/reset").json()
+    still_b = client_b.get("/api/state").json()
+
+    assert reset_a["days"] == 0
+    assert reset_a["ring"] == 11
+    assert still_b["days"] == 1
 
 
 def test_cors_allows_grok_origin():

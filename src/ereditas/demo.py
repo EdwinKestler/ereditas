@@ -104,9 +104,14 @@ def _fresh_vault() -> Vault:
 
 
 class DemoSession:
-    def __init__(self, settings: Settings | None = None) -> None:
+    def __init__(
+        self,
+        settings: Settings | None = None,
+        *,
+        meta: MetaStack | None = None,
+    ) -> None:
         self.settings = settings or Settings()
-        self.meta = MetaStack(self.settings)
+        self.meta = meta or MetaStack(self.settings)
         self.theme = "midnight"
         self.reset()
 
