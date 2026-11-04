@@ -80,3 +80,45 @@ def test_worked_case_then_passed():
         assert needle not in dump
     assert "ereditas://grant/" in dump
     assert done["owner"] == "Elena Reyes (demo persona)"
+
+
+def test_voice_answer_closed_tree_and_unknown_clip_are_refused():
+    client = TestClient(app)
+
+    closed = client.post(
+        "/api/voice-answer", json={"who": "Ana", "clip": "ana-passed"}
+    )
+    traversal = client.post(
+        "/api/voice-answer", json={"who": "Ana", "clip": "../../ana-passed"}
+    )
+    unknown = client.post(
+        "/api/voice-answer", json={"who": "Ana", "clip": "ana-other"}
+    )
+
+    assert closed.status_code == 200
+    assert closed.json()["packet"] is None
+    assert closed.json()["error"]
+    assert traversal.status_code == 422
+    assert unknown.status_code == 422
+
+
+def test_voice_answer_snapshot_is_safe_and_releases_only_ordinary_scopes():
+    client = TestClient(app)
+    client.post("/api/worked-case")
+    client.post("/api/message")
+
+    response = client.post(
+        "/api/voice-answer", json={"who": "Ana", "clip": "ana-passed"}
+    )
+
+    assert response.status_code == 200
+    snap = response.json()
+    assert snap["voice"]["who"] == "Ana"
+    assert snap["voice"]["interpreted"] == "passed"
+    assert {item["grant_id"] for item in snap["packet"]["items"]} == {
+        "drive",
+        "facebook",
+    }
+    dump = json.dumps(snap).lower()
+    for needle in SECRET_NEEDLES:
+        assert needle not in dump

@@ -5,3 +5,7 @@ Human-reviewed plan artifacts for the plan-canvas workflow. Write
 
 If `ecc-plan-canvas` is missing, present the plan in chat and wait for an
 explicit approve or request-changes. See `docs/ecc.md`.
+
+| Plan | Status |
+| --- | --- |
+| [`live-url.plan.md`](live-url.plan.md) | Drafted. Live product URL (Fly/Railway, same-origin proxy). Execute only after an explicit go. |

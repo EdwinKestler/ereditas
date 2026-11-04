@@ -32,6 +32,16 @@ export type Wish = { id: string; label: string; done: boolean };
 
 export type ThreadLine = { from: string; side?: "in" | "out"; text: string };
 
+export type VoiceAnswer = {
+  who: string;
+  clip_url: string;
+  transcript: string;
+  interpreted: "well" | "unsure" | "passed";
+  quote: string;
+  models: { transcribe: string; interpret: string };
+  sources: { transcribe: string; interpret: string };
+};
+
 export type Packet = {
   confirmer: string;
   whatsapp_body: string;
@@ -61,10 +71,12 @@ export type Snapshot = {
   narrative: string;
   wishes: Wish[];
   thread: ThreadLine[];
+  voice: VoiceAnswer | null;
   grants: Grant[];
   meta: {
     configured: boolean;
     muse_model: string;
+    muse_voice_model: string;
     sam_model: string;
     vocab: string[];
   };
@@ -96,6 +108,14 @@ export function canMessage(snap: Snapshot) {
 
 export function canAnswer(snap: Snapshot) {
   return snap.tree_open && snap.messaged && snap.confirmation === "silent";
+}
+
+export function canVoiceAnswer(snap: Snapshot) {
+  return canAnswer(snap) && snap.voice === null;
+}
+
+export function voiceBadge(voice: VoiceAnswer) {
+  return `Muse Voice Transcribe → Muse Spark: ${voice.interpreted.toUpperCase()}`;
 }
 
 export function grantBadge(grant: Grant, mayRelease: boolean) {

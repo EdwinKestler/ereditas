@@ -1,0 +1,39 @@
+{
+	auto_https off
+	admin off
+}
+
+:8080 {
+	encode zstd gzip
+
+	header {
+		Permissions-Policy "camera=(), geolocation=(), microphone=()"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+	}
+
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8765 {
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 120s
+			}
+		}
+	}
+
+	handle /static/* {
+		reverse_proxy 127.0.0.1:8765
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:8081 {
+			header_up Host 127.0.0.1:8081
+		}
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

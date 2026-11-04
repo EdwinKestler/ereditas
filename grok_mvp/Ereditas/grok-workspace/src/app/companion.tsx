@@ -3,6 +3,7 @@ import {
   Activity,
   KeyRound,
   MessageCircle,
+  Mic,
   Play,
   Radio,
   ScrollText,
@@ -15,10 +16,13 @@ import {
   boxStyle,
   canAnswer,
   canMessage,
+  canVoiceAnswer,
   grantBadge,
   toneFrom,
+  voiceBadge,
   type Box,
   type Post,
+  type VoiceAnswer,
 } from "@/app/session";
 import { useApp, type Tab } from "@/app/store";
 
@@ -437,11 +441,15 @@ function Circle() {
           {snap.tree_open && !snap.thread.length && (
             <p className="text-sm text-muted">The message stays unsent until you open the tree.</p>
           )}
-          {snap.thread.map((line, i) => (
-            <Bubble key={`${line.from}-${i}`} side={line.side === "in" ? "in" : "out"}>
-              {line.text}
-            </Bubble>
-          ))}
+          {snap.thread.map((line, i) =>
+            snap.voice && line.side === "in" && line.from === snap.voice.who ? (
+              <VoiceBubble key={`voice-${i}`} voice={snap.voice} />
+            ) : (
+              <Bubble key={`${line.from}-${i}`} side={line.side === "in" ? "in" : "out"}>
+                {line.text}
+              </Bubble>
+            ),
+          )}
         </div>
       </article>
       {canMessage(snap) && (
@@ -456,6 +464,27 @@ function Circle() {
       )}
       {canAnswer(snap) && (
         <div className="grid gap-2">
+          {canVoiceAnswer(snap) && (
+            <div className="mb-2 grid gap-2 rounded-card border border-line bg-card p-3">
+              <button
+                type="button"
+                onClick={() => void s.voiceAnswer("ana-passed")}
+                disabled={s.busy}
+                className="flex h-12 items-center justify-center gap-2 rounded-full bg-ink text-paper disabled:opacity-40"
+              >
+                <Mic className="size-4" strokeWidth={1.8} />
+                Ana sent a voice note
+              </button>
+              <button
+                type="button"
+                onClick={() => void s.voiceAnswer("ana-unsure")}
+                disabled={s.busy}
+                className="h-11 rounded-full border border-line text-sm text-muted disabled:opacity-40"
+              >
+                Try the unsure voice note
+              </button>
+            </div>
+          )}
           <button
             type="button"
             onClick={() => void s.answer("well")}
@@ -491,6 +520,24 @@ function Circle() {
         <li>3 · Family lawyer — voice only</li>
       </ul>
     </section>
+  );
+}
+
+function VoiceBubble({ voice }: { voice: VoiceAnswer }) {
+  return (
+    <div className="max-w-xs rounded-2xl bg-card px-3 py-3 text-ink">
+      <p className="flex items-center gap-2 text-sm font-medium">
+        <Mic className="size-4 text-gold" strokeWidth={1.8} />
+        {voice.who} sent a voice note
+      </p>
+      <audio className="mt-2 h-11 w-full" controls preload="metadata" src={voice.clip_url}>
+        Your browser does not support audio playback.
+      </audio>
+      <p className="mt-2 text-sm leading-relaxed">“{voice.transcript}”</p>
+      <span className="mt-2 inline-flex rounded-full border border-line px-2 py-1 text-xs text-gold">
+        {voiceBadge(voice)}
+      </span>
+    </div>
   );
 }
 

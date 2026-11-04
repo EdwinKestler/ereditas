@@ -35,7 +35,7 @@ the key is present. TDD: `docs/releases/0.1.0/`.
 
 ## Submission artifacts still owed
 
-- Live product URL
+- Live product URL — https://ereditas.fly.dev/ (Fly.io; Pure Minimal React shell + FastAPI)
 - 3-minute demo video of hackathon-period work
 - Cerebral Valley submit form before 4 Nov 9:00 PM ET
 

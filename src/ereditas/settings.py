@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     model_api_key: str = ""
     model_api_base_url: str = "https://api.meta.ai/v1"
     muse_model: str = "muse-spark-1.3"
+    muse_voice_model: str = "muse-voice-transcribe-1.0"
     sam_model: str = "sam-3.1"
     muse_image_model: str = "muse-image-1.0"
     hf_token: str = ""

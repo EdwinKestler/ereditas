@@ -35,6 +35,12 @@ Open **http://127.0.0.1:8080**. Vite proxies `/api` and `/static` to FastAPI
 on `:8765`. Pulse, Watch, Circle, Vault, Wishes. The ring is a watch index.
 Release requires a human **passed**. Demo owner: Elena Reyes.
 
+The bundled Spanish voice notes live under `apps/companion/static/voice/`.
+They are offline TTS fixtures for the demo. Edwin can replace them with real
+recordings while keeping the `ana-passed.wav` and `ana-unsure.wav` filenames;
+use mono 16-bit PCM WAV at 16 kHz or 24 kHz so the live Muse Voice Transcribe
+file endpoint accepts them without conversion.
+
 The FastAPI HTML at http://127.0.0.1:8765 still serves the five theme cards.
 
 ## Palimnex

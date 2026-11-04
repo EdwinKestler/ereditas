@@ -1,4 +1,8 @@
+import json
 from pathlib import Path
+from types import SimpleNamespace
+
+import httpx
 
 from ereditas.meta import MetaStack, _parse_boxes
 from ereditas.settings import Settings
@@ -46,3 +50,116 @@ def test_offline_segment_uses_mock_box(tmp_path: Path):
     result = stack.segment_image(img, "candle")
     assert result["source"] == "mock"
     assert result["boxes"][0]["label"] == "candle"
+
+
+def test_offline_transcribe_uses_deterministic_spanish_mock(tmp_path: Path):
+    audio = tmp_path / "ana-passed.wav"
+    audio.write_bytes(b"not-real-audio")
+    stack = MetaStack(Settings(_env_file=None, meta_api_key="", model_api_key=""))
+
+    result = stack.transcribe(audio)
+
+    assert result == {
+        "text": "Hola, soy Ana. Con mucho dolor les confirmo que Elena falleció anoche.",
+        "source": "mock",
+        "model": None,
+    }
+
+
+def test_live_transcribe_uses_documented_meta_multipart_shape(
+    tmp_path: Path, monkeypatch
+):
+    audio = tmp_path / "ana-passed.wav"
+    audio.write_bytes(b"RIFF-fake")
+    captured = {}
+
+    class FakeResponse:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"transcript": "Elena falleció anoche."}
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            captured["client"] = kwargs
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def post(self, url, **kwargs):
+            captured["url"] = url
+            captured["post"] = kwargs
+            return FakeResponse()
+
+    monkeypatch.delenv("EREDITAS_OFFLINE", raising=False)
+    monkeypatch.setattr(httpx, "Client", FakeClient)
+    stack = MetaStack(
+        Settings(_env_file=None, meta_api_key="test-key", model_api_key="")
+    )
+
+    result = stack.transcribe(audio)
+
+    assert captured["url"] == "https://api.meta.ai/v1/asr/transcribe"
+    request_part = captured["post"]["files"]["request"]
+    assert request_part[2] == "application/json"
+    assert json.loads(request_part[1]) == {
+        "mode": "PUSH_TO_TALK",
+        "model": "muse-voice-transcribe-1.0",
+        "audioEncoding": "WAV",
+        "languageBias": ["Spanish"],
+        "keywords": ["Ana", "Elena", "Ereditas"],
+    }
+    assert captured["post"]["files"]["audio"][2] == "audio/wav"
+    assert result["text"] == "Elena falleció anoche."
+    assert result["source"] == "meta"
+    assert result["model"] == "muse-voice-transcribe-1.0"
+
+
+def test_offline_interpretation_is_fail_closed_for_ambiguous_and_hedged_text():
+    stack = MetaStack(Settings(_env_file=None, meta_api_key="", model_api_key=""))
+
+    ambiguous = stack.interpret_confirmation(
+        "No sé, no he podido hablar con ella desde el martes.", "Ana"
+    )
+    hedged = stack.interpret_confirmation("Creo que Elena falleció.", "Ana")
+    clear = stack.interpret_confirmation(
+        "Con mucho dolor les confirmo que Elena falleció anoche.", "Ana"
+    )
+
+    assert ambiguous["answer"] == "unsure"
+    assert hedged["answer"] == "unsure"
+    assert clear["answer"] == "passed"
+    assert clear["source"] == "mock"
+
+
+def test_interpretation_malformed_model_json_is_unsure(monkeypatch):
+    class FakeCompletions:
+        def create(self, **_kwargs):
+            return SimpleNamespace(
+                choices=[
+                    SimpleNamespace(message=SimpleNamespace(content="not json"))
+                ]
+            )
+
+    fake_client = SimpleNamespace(
+        chat=SimpleNamespace(completions=FakeCompletions())
+    )
+    monkeypatch.delenv("EREDITAS_OFFLINE", raising=False)
+    stack = MetaStack(
+        Settings(_env_file=None, meta_api_key="test-key", model_api_key="")
+    )
+    monkeypatch.setattr(stack, "client", lambda: fake_client)
+
+    result = stack.interpret_confirmation(
+        "Elena falleció anoche.", "Ana"
+    )
+
+    assert result["answer"] == "unsure"
+    assert result["quote"] == "Elena falleció anoche."
+    assert result["model"] == "muse-spark-1.3"

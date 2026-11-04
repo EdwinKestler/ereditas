@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,7 +20,7 @@ STATIC = ROOT / "apps" / "companion" / "static"
 settings = Settings()
 session = DemoSession(settings)
 
-app = FastAPI(title="Ereditas companion", version="0.1.0")
+app = FastAPI(title="Ereditas companion", version="0.2.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=(
@@ -37,6 +38,11 @@ THEMES = ("midnight", "heritage", "forest", "minimal", "stone")
 class AnswerBody(BaseModel):
     who: str = "Ana"
     answer: str = Field(pattern="^(well|unsure|passed)$")
+
+
+class VoiceAnswerBody(BaseModel):
+    who: str = Field(default="Ana", min_length=1, max_length=80)
+    clip: Literal["ana-passed", "ana-unsure"]
 
 
 class ThemeBody(BaseModel):
@@ -60,6 +66,7 @@ def health() -> dict:
         "hf_configured": settings.hf_configured,
         "modal_configured": settings.modal_configured,
         "muse_model": settings.muse_model,
+        "muse_voice_model": settings.muse_voice_model,
         "sam_model": settings.sam_model,
     }
 
@@ -99,6 +106,11 @@ def worked_case() -> dict:
 @app.post("/api/answer")
 def answer(body: AnswerBody) -> dict:
     return session.answer(body.who, body.answer)
+
+
+@app.post("/api/voice-answer")
+def voice_answer(body: VoiceAnswerBody) -> dict:
+    return session.voice_answer(body.who, body.clip)
 
 
 @app.post("/api/theme")

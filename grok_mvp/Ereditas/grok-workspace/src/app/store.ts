@@ -15,6 +15,7 @@ type State = {
   worked: () => Promise<void>;
   message: () => Promise<void>;
   answer: (answer: "well" | "unsure" | "passed") => Promise<void>;
+  voiceAnswer: (clip: "ana-passed" | "ana-unsure") => Promise<void>;
   reset: () => Promise<void>;
 };
 
@@ -56,6 +57,7 @@ export const useApp = create<State>((set, get) => {
     worked: () => run("/api/worked-case"),
     message: () => run("/api/message"),
     answer: (answer) => run("/api/answer", "POST", { who: "Ana", answer }),
+    voiceAnswer: (clip) => run("/api/voice-answer", "POST", { who: "Ana", clip }),
     reset: () => run("/api/reset"),
   };
 });

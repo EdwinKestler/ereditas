@@ -13,6 +13,17 @@ from ereditas.vault import Action, Grant, Role, Vault
 
 STATIC = Path(__file__).resolve().parents[2] / "apps" / "companion" / "static"
 
+VOICE_CLIPS = {
+    "ana-passed": {
+        "path": STATIC / "voice" / "ana-passed.wav",
+        "url": "/static/voice/ana-passed.wav",
+    },
+    "ana-unsure": {
+        "path": STATIC / "voice" / "ana-unsure.wav",
+        "url": "/static/voice/ana-unsure.wav",
+    },
+}
+
 REPLIES = {
     "well": "She is with me. All is well.",
     "unsure": "I have not heard. I will call her sister.",
@@ -113,6 +124,7 @@ class DemoSession:
         self.posts: list[dict[str, Any]] = []
         self.packet: dict[str, Any] | None = None
         self.narrative = ""
+        self.voice: dict[str, Any] | None = None
         self.wishes = [
             {"id": "drive", "label": "Share family Drive with Ana", "done": False},
             {"id": "facebook", "label": "Request Facebook memorialization", "done": False},
@@ -187,6 +199,7 @@ class DemoSession:
         self.confirmation = "silent"
         self.packet = None
         self.narrative = ""
+        self.voice = None
         self.thread = []
         self.messaged = False
         self.next_contact = "Ana"
@@ -254,6 +267,34 @@ class DemoSession:
                 wish["done"] = True
         return self.snapshot()
 
+    def voice_answer(self, who: str, clip: str) -> dict[str, Any]:
+        day = run_watch_day(self._signals())
+        if not day.tree_open:
+            return self.snapshot(error="Tree is closed. Posterior is under the 20% bar.")
+        selected = VOICE_CLIPS.get(clip)
+        if selected is None:
+            return self.snapshot(error="Unknown voice clip.")
+
+        transcribed = self.meta.transcribe(selected["path"])
+        interpreted = self.meta.interpret_confirmation(transcribed["text"], who)
+        self.answer(who, interpreted["answer"])
+        self.voice = {
+            "who": who,
+            "clip_url": selected["url"],
+            "transcript": transcribed["text"],
+            "interpreted": interpreted["answer"],
+            "quote": interpreted["quote"],
+            "models": {
+                "transcribe": self.settings.muse_voice_model,
+                "interpret": self.settings.muse_model,
+            },
+            "sources": {
+                "transcribe": transcribed["source"],
+                "interpret": interpreted["source"],
+            },
+        }
+        return self.snapshot()
+
     def snapshot(self, error: str | None = None) -> dict[str, Any]:
         day = run_watch_day(self._signals())
         chips = {
@@ -287,6 +328,7 @@ class DemoSession:
             "narrative": self.narrative,
             "wishes": self.wishes,
             "thread": self.thread,
+            "voice": self.voice,
             "audit": self.vault.audit,
             "grants": [
                 {
@@ -303,6 +345,7 @@ class DemoSession:
             "meta": {
                 "configured": self.meta.configured,
                 "muse_model": self.settings.muse_model,
+                "muse_voice_model": self.settings.muse_voice_model,
                 "sam_model": self.settings.sam_model,
                 "vocab": list(MEMORIAL_VOCAB),
             },

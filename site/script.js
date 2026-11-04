@@ -1,23 +1,23 @@
 const stages = {
   watch: {
-    number: "Stage 01", tag: "Algorithm 1", title: "The companion listens quietly.",
+    number: "Stage 01", tag: "Silence watch", title: "The companion listens quietly.",
     body: "Phone unlocks, Meta sessions, and a one-dollar heartbeat form an early-warning watch. The starting index is calm and the vault is sealed.",
     signals: ["Phone present", "Meta active", "Heartbeat clear"], authority: "None — sealed", value: "11", unit: "watch index", caption: "Steady", progress: 11,
   },
   evidence: {
-    number: "Stage 02", tag: "Muse Spark + SAM 3.1", title: "Evidence raises a question—not permission.",
-    body: "The companion checks news and the registered circle. SAM 3.1 recognizes memorial objects, while likelihood ratios update the posterior. After two quiet days, the policy bar remains closed.",
-    signals: ["2 quiet days", "3 memorial objects", "Posterior 6.95%"], authority: "None — under 20% bar", value: "7", unit: "posterior %", caption: "Tree closed", progress: 7,
+    number: "Stage 02", tag: "SAM 3.1 + Bayes update", title: "Evidence raises a question—not permission.",
+    body: "The companion checks news and the registered circle. SAM 3.1 recognizes memorial objects, while likelihood ratios update the evidence score. After two quiet days, the 20% threshold remains closed.",
+    signals: ["2 quiet days", "3 memorial objects", "Evidence score 6.95%"], authority: "None — under 20% threshold", value: "7", unit: "evidence score %", caption: "Below threshold", progress: 7,
   },
   confirm: {
     number: "Stage 03", tag: "Human confirmation", title: "The circle carries the consequence.",
-    body: "The worked case crosses the policy bar and opens a WhatsApp confirmation tree. The system can now ask Ana—but the vault is still sealed until her answer is explicit.",
-    signals: ["10 silent days", "Obituary signal", "Tree open"], authority: "Pending human answer", value: "96", unit: "posterior %", caption: "Ask the circle", progress: 96,
+    body: "The worked case crosses the 20% threshold and can ask your people. The system can now ask Ana—but the vault is still sealed until her answer is explicit.",
+    signals: ["10 silent days", "Obituary signal", "Ready to ask"], authority: "Pending human answer", value: "96", unit: "evidence score %", caption: "Ask the circle", progress: 96,
   },
   release: {
-    number: "Stage 04", tag: "Algorithm 2", title: "Passed releases only what was promised.",
-    body: "Ana’s human confirmation unlocks ordinary, owner-classified scopes. Drive and Facebook receive short-lived grants. The high-value wallet and bank remain held for a second confirmer.",
-    signals: ["Ana: passed", "2 scoped grants", "High-value held"], authority: "Human-confirmed scopes", value: "2", unit: "grants released", caption: "Scoped only", progress: 58,
+    number: "Stage 04", tag: "Scoped release", title: "Passed releases only what was promised.",
+    body: "Ana’s human confirmation unlocks ordinary, owner-classified items. Drive and Facebook receive short-lived access. The high-value wallet and bank remain held for a second confirmer.",
+    signals: ["Ana: passed", "2 grants released", "High-value held"], authority: "Human-confirmed access", value: "2", unit: "grants released", caption: "Only what you chose", progress: 58,
   },
 };
 

@@ -2,8 +2,9 @@
 
 Chosen judge UI: the Pure Minimal Grok shell on **http://127.0.0.1:8080**.
 Python FastAPI on **http://127.0.0.1:8765** owns Algorithm 1, Algorithm 2,
-SAM 3.1, and Muse Spark 1.3. Product idea: `ideas/ereditas.md`. TDD:
-`docs/releases/0.1.0/`.
+SAM 3.1, Muse Voice Transcribe, and Muse Spark 1.3. Product idea:
+`ideas/ereditas.md`. TDD: `docs/releases/0.1.0/` and
+`docs/releases/0.2.0/voice.tdd.md`.
 
 ## Two processes
 
@@ -59,7 +60,9 @@ Demo owner: **Elena Reyes** (persona). Confirmer: **Ana** (primary heir).
    WhatsApp is refused.
 3. Run the **worked case** (white paper Table 4: 10 silent days, one heartbeat
    miss, obituary, three memorial posts). Tree opens (~95.98%).
-4. Circle → Send WhatsApp → Ana **passed**.
+4. Circle → Send WhatsApp → **Ana sent a voice note**. Play the note, then use
+   it. Muse Voice Transcribe produces the Spanish transcript and Muse Spark
+   interprets it as **passed**. The existing tap answers remain available.
 5. Vault releases **Drive + Facebook** only (`ereditas://grant/` links, no
    credentials). Wallet and bank stay **Hold** until a second confirmer.
    Wishes check off the released scopes. Muse Spark writes the heir narrative.
@@ -81,8 +84,10 @@ All JSON. Snapshot shape is `DemoSession.snapshot()`.
 | POST | `/api/worked-case` | Table 4 episode, then scan |
 | POST | `/api/message` | outbound WhatsApp if `tree_open` |
 | POST | `/api/answer` | `{ "who": "Ana", "answer": "well\|unsure\|passed" }` |
+| POST | `/api/voice-answer` | `{ "who": "Ana", "clip": "ana-passed\|ana-unsure" }`; bundled clips only |
 | POST | `/api/theme` | FastAPI static theme only (`midnight` default) |
 | GET | `/static/memorial/*.jpg` | SAM source images |
+| GET | `/static/voice/*.wav` | bundled Spanish voice-note fixtures |
 
 CORS allowlist: `http://127.0.0.1:8080`, `http://localhost:8080`.
 
@@ -94,8 +99,23 @@ Live calls when `META_API_KEY` or `MODEL_API_KEY` is set and
 
 | Model | Id | Use |
 | --- | --- | --- |
-| Muse Spark 1.3 | `muse-spark-1.3` | heir narrative after `passed` |
+| Muse Spark 1.3 | `muse-spark-1.3` | confirmation interpretation + heir narrative |
+| Muse Voice Transcribe | `muse-voice-transcribe-1.0` | Spanish voice-note transcription |
 | SAM 3.1 | `sam-3.1` | noun-phrase segment of memorial objects |
+
+The voice client follows Meta's
+[Speech to text documentation](https://dev.meta.ai/docs/speech-to-text):
+`POST https://api.meta.ai/v1/asr/transcribe` with multipart `request` JSON and
+`audio` WAV parts. The request uses `PUSH_TO_TALK`, `audioEncoding: WAV`, and a
+Spanish language bias. Muse Spark uses strict JSON Schema structured output as
+documented in [Structured output](https://dev.meta.ai/docs/structured-output).
+Python validates the enum, exact object shape, verbatim quote, semantic marker,
+and hedging before passing the answer through `DemoSession.answer()`. Any
+ambiguous, malformed, fabricated, or hedged result becomes `unsure`.
+
+Offline, unconfigured, or failed live calls use deterministic mock output with
+`source: "mock"`. HTTP failures log only the response status, never a key or
+response body.
 
 SAM prompt is a noun phrase. Boxes parse from `<|box;x1=…|>` and are stored
 as 0–1 fractions. The Grok mapper `boxStyle` turns them into CSS percents.

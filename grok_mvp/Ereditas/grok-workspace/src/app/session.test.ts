@@ -4,9 +4,11 @@ import {
   boxStyle,
   canAnswer,
   canMessage,
+  canVoiceAnswer,
   grantBadge,
   snapshotLooksSafe,
   toneFrom,
+  voiceBadge,
   type Snapshot,
 } from "./session.ts";
 
@@ -34,8 +36,15 @@ function base(over: Partial<Snapshot> = {}): Snapshot {
     narrative: "",
     wishes: [],
     thread: [],
+    voice: null,
     grants: [],
-    meta: { configured: false, muse_model: "muse-spark-1.3", sam_model: "sam-3.1", vocab: [] },
+    meta: {
+      configured: false,
+      muse_model: "muse-spark-1.3",
+      muse_voice_model: "muse-voice-transcribe-1.0",
+      sam_model: "sam-3.1",
+      vocab: [],
+    },
     index_note: "The ring is a watch index, not P(Z=1|x).",
     ...over,
   };
@@ -71,6 +80,26 @@ describe("gates", () => {
     assert.equal(canAnswer(open), false);
     const asked = { ...open, messaged: true };
     assert.equal(canAnswer(asked), true);
+    assert.equal(canVoiceAnswer(asked), true);
+  });
+});
+
+describe("voiceBadge", () => {
+  it("maps the model chain and interpretation for the Circle badge", () => {
+    const voice = {
+      who: "Ana",
+      clip_url: "/static/voice/ana-passed.wav",
+      transcript: "Elena falleció anoche.",
+      interpreted: "passed" as const,
+      quote: "Elena falleció anoche.",
+      models: {
+        transcribe: "muse-voice-transcribe-1.0",
+        interpret: "muse-spark-1.3",
+      },
+      sources: { transcribe: "mock", interpret: "mock" },
+    };
+
+    assert.equal(voiceBadge(voice), "Muse Voice Transcribe → Muse Spark: PASSED");
   });
 });
 

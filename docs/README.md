@@ -11,6 +11,7 @@ Start here, then open the matching file. Palimnex indexes this folder.
 | [`ecc.md`](ecc.md) | Vendored ECC workflow skills |
 | [`project-source.md`](project-source.md) | Grok project URL and local ids |
 | [`plans/`](plans/README.md) | Human-reviewed plan-canvas files |
+| [`plans/live-url.plan.md`](plans/live-url.plan.md) | Live product URL deploy (not GitHub Pages) |
 | [`releases/0.1.0/`](releases/0.1.0/README.md) | TDD evidence for the playable companion |
 
 Product idea (local authority): [`../ideas/ereditas.md`](../ideas/ereditas.md).
