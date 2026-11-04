@@ -12,7 +12,7 @@ only if feat/voice-note merges.
 | Live product | https://app.ereditas.com/ |
 | Demo video (≤3 min) | VIDEO_URL |
 | Source | https://github.com/EdwinKestler/ereditas |
-| Explainer | https://edwinkestler.github.io/ereditas/ |
+| Explainer | https://ereditas.com/ |
 
 ## One-liner
 

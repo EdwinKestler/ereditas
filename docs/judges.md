@@ -1,6 +1,6 @@
 # How to test Ereditas (judges)
 
-**Live companion:** https://app.ereditas.com/ (backup: https://ereditas.fly.dev/) · **Explainer:** https://edwinkestler.github.io/ereditas/
+**Live companion:** https://app.ereditas.com/ (backup: https://ereditas.fly.dev/) · **Explainer:** https://ereditas.com/
 
 Each visitor gets a private demo session; other judges don't see your
 changes. **Start fresh** (top right) returns to the beginning at any time.
